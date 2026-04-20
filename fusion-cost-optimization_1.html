@@ -1,0 +1,478 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Manrope',sans-serif;background:#0C0F13;}
+.page-wrapper{max-width:1100px;margin:0 auto;padding:32px 28px 48px;}
+
+.hero-header{background:linear-gradient(135deg,#14181E 0%,#1A1F2A 60%,#1E2230 100%);border:1px solid #262D3A;border-radius:16px;padding:36px 40px 32px;margin-bottom:24px;position:relative;overflow:hidden;}
+.hero-header::before{content:'';position:absolute;top:-80px;right:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,105,74,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-header::after{content:'';position:absolute;bottom:-40px;left:30%;width:200px;height:200px;background:radial-gradient(circle,rgba(83,74,183,0.10) 0%,transparent 70%);pointer-events:none;}
+.hero-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;position:relative;z-index:1;}
+.dbt-logo-mark{width:44px;height:44px;background:#FF694A;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,105,74,0.25);}
+.hero-badge{background:rgba(255,105,74,0.12);border:1px solid rgba(255,105,74,0.25);color:#FF8C6B;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;letter-spacing:0.03em;text-transform:uppercase;}
+.hero-title{font-size:28px;font-weight:700;color:#F0F2F5;letter-spacing:-0.02em;line-height:1.25;margin-bottom:8px;position:relative;z-index:1;}
+.hero-subtitle{font-size:14px;color:#8892A2;line-height:1.65;max-width:640px;position:relative;z-index:1;}
+
+.cost-feature-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px;}
+.cost-feature-btn{padding:10px 18px;font-size:12px;font-weight:600;border:1px solid #262D3A;border-radius:8px;cursor:pointer;background:#0C0F13;color:#6B7280;font-family:'Manrope',sans-serif;transition:all 0.2s ease;display:flex;align-items:center;gap:8px;}
+.cost-feature-btn.active{background:linear-gradient(135deg,#FF694A,#FF8B6A);border-color:transparent;color:#fff;box-shadow:0 2px 12px rgba(255,105,74,0.3);}
+.cost-feature-btn:hover:not(.active){background:#1A1F2A;color:#A0A8B8;}
+.cost-panel{display:none;}.cost-panel.on{display:block;}
+
+.feature-header{margin-bottom:24px;}
+.feature-tag{font-size:11px;font-weight:600;color:#FF8C6B;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;}
+.feature-title{font-size:24px;font-weight:700;color:#F0F2F5;letter-spacing:-0.01em;margin-bottom:8px;}
+.feature-subtitle{font-size:14px;color:#8892A2;line-height:1.6;}
+.savings-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(61,185,80,0.12);border:1px solid rgba(61,185,80,0.25);color:#3fb950;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-top:8px;}
+
+.dag-container{background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
+.dag-label{font-size:11px;font-weight:600;color:#6B7280;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:16px;}
+.dag-node{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:500;font-family:'JetBrains Mono',monospace;min-width:130px;text-align:center;transition:all 0.6s ease;position:relative;}
+.dag-node.source.fresh{background:#1a2a00;border:1px solid #3a5a00;color:#3fb950;}
+.dag-node.source.stale{background:#1a1a1a;border:1px solid #333;color:#666;}
+.dag-arrow{color:#333;font-size:16px;flex-shrink:0;}
+.dag-node-label{font-size:10px;color:#555;margin-top:2px;font-family:'Manrope',sans-serif;font-weight:400;}
+.dag-node-status{font-size:9px;position:absolute;top:-8px;right:-8px;padding:2px 6px;border-radius:10px;font-weight:600;font-family:'Manrope',sans-serif;}
+.dag-node-status.skip{background:#333;color:#888;}
+.dag-node-status.build{background:#1a4a2a;color:#3fb950;}
+.dag-node-status.waste{background:#5a3a00;color:#EF9F27;}
+.dag-node-status.reuse{background:#2a2a5a;color:#7F77DD;}
+
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+
+.compare-split{display:flex;gap:20px;margin-bottom:20px;}
+.compare-half{flex:1;background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:20px;position:relative;}
+.compare-half.before{border-color:#3a2200;}
+.compare-half.after{border-color:#1a3a2a;}
+.compare-half-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.compare-half.before .compare-half-label{color:#f85149;}
+.compare-half.after .compare-half-label{color:#3fb950;}
+
+.stats-bar{display:flex;gap:16px;background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:18px 24px;margin-bottom:20px;flex-wrap:wrap;}
+.stat-block{flex:1;min-width:120px;}
+.stat-block-label{font-size:11px;color:#6B7280;margin-bottom:4px;font-weight:500;}
+.stat-block-val{font-size:22px;font-weight:700;color:#F0F2F5;}
+.stat-block-val.green{color:#3fb950;}
+.stat-block-val.orange{color:#EF9F27;}
+.stat-block-val.red{color:#f85149;}
+
+.sim-controls{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.sim-btn{padding:8px 16px;font-size:12px;font-weight:600;border:1px solid #262D3A;border-radius:8px;cursor:pointer;background:#14181E;color:#6B7280;font-family:'Manrope',sans-serif;transition:all 0.2s ease;}
+.sim-btn.active{background:#1E2430;border-color:#FF694A;color:#F0F2F5;}
+.sim-btn:hover:not(.active){background:#1A1F2A;}
+.sim-run-btn{padding:8px 20px;font-size:12px;font-weight:600;border:none;border-radius:8px;cursor:pointer;background:linear-gradient(135deg,#FF694A,#FF8B6A);color:#fff;font-family:'Manrope',sans-serif;}
+
+.key-points{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.key-point{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:#C5CBD6;line-height:1.5;}
+.key-point-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;}
+.key-point-icon.save{background:rgba(61,185,80,0.15);color:#3fb950;}
+
+.flow-box{background:#111;border:1px solid #262626;border-radius:8px;padding:14px 18px;font-size:12px;color:#aaa;}
+
+.summary-card{background:linear-gradient(135deg,#14181E,#1A1F2A);border:1px solid #262D3A;border-radius:16px;padding:28px;text-align:center;}
+.summary-total{font-size:48px;font-weight:800;background:linear-gradient(135deg,#3fb950,#58d68d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+.summary-label{font-size:16px;color:#8892A2;margin-bottom:20px;}
+.summary-breakdown{display:flex;gap:0;justify-content:center;flex-wrap:wrap;}
+.summary-item{padding:12px 20px;text-align:center;border-right:1px solid #262D3A;}
+.summary-item:last-child{border-right:none;}
+.summary-item-val{font-size:20px;font-weight:700;color:#3fb950;}
+.summary-item-label{font-size:11px;color:#6B7280;margin-top:2px;}
+
+.test-query{background:#111;border:1px solid #262626;border-radius:6px;padding:8px 12px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#888;margin-bottom:6px;}
+.test-combined{background:#0d1a10;border:1px solid #1a4a2a;border-radius:6px;padding:12px;font-size:11px;font-family:'JetBrains Mono',monospace;color:#3fb950;line-height:1.8;}
+
+.col-model{background:#14181E;border:1px solid #1E2430;border-radius:8px;padding:14px;min-width:140px;}
+.col-model-name{font-size:13px;font-weight:600;color:#F0F2F5;margin-bottom:8px;font-family:'JetBrains Mono',monospace;}
+.col-item{font-size:11px;padding:4px 8px;border-radius:4px;margin-bottom:3px;font-family:'JetBrains Mono',monospace;}
+.col-item.changed{background:#2a1a00;color:#EF9F27;border:1px solid #5a3a00;}
+.col-item.unchanged{background:#111;color:#555;border:1px solid #1a1a1a;}
+.col-item.used{background:#0d2a1a;color:#3fb950;border:1px solid #1a4a2a;}
+.col-item.unused{background:#111;color:#555;border:1px solid #1a1a1a;}
+.col-arrow{display:flex;align-items:center;padding-top:30px;color:#444;font-size:18px;}
+.col-build-label{font-size:10px;font-weight:600;text-align:center;margin-top:8px;padding:4px 8px;border-radius:4px;}
+.col-build-label.triggers{background:#2a0a00;color:#f85149;}
+.col-build-label.skips{background:#0d2a1a;color:#3fb950;}
+</style>
+
+<div class="page-wrapper">
+
+<div class="hero-header">
+  <div class="hero-top">
+    <div class="dbt-logo-mark"><svg viewBox="0 0 28 28" fill="none"><text x="14" y="19" text-anchor="middle" font-size="12" fill="white" font-weight="700" font-family="Manrope,sans-serif">dbt</text></svg></div>
+    <div class="hero-badge">Cost Optimization</div>
+  </div>
+  <div class="hero-title">dbt Fusion — Warehouse Cost Optimization</div>
+  <div style="font-size:14px;color:#FF8C6B;font-weight:500;margin-bottom:8px;">Run jobs on Fusion, save 29%+</div>
+  <div class="hero-subtitle">Fusion is stateful — it remembers what has been done before. This lays the foundation for platform experiences that intelligently automate, optimize, and reduce warehouse spend.</div>
+</div>
+
+<div class="cost-feature-nav">
+  <button class="cost-feature-btn active" onclick="showCost(0)">Overview</button>
+  <button class="cost-feature-btn" onclick="showCost(1)">Fusion SQL Comprehension</button>
+  <button class="cost-feature-btn" onclick="showCost(2)">State-Aware Orchestration</button>
+  <button class="cost-feature-btn" onclick="showCost(3)">Efficient Testing</button>
+  <button class="cost-feature-btn" onclick="showCost(4)">Slimmer CI</button>
+</div>
+
+<!-- ── Overview ── -->
+<div class="cost-panel on" id="cp0">
+<div class="feature-header">
+  <div class="feature-tag">Warehouse Cost Optimization</div>
+  <div class="feature-title">Run jobs on Fusion, save 29%+</div>
+  <div class="feature-subtitle">Fusion is stateful. When it executes commands, it not only understands your current project state but also remembers what has been done before. This lays the foundation for platform experiences that intelligently automate, optimize, and simplify your dbt projects.</div>
+</div>
+<div class="summary-card">
+  <div class="summary-total">29%+</div>
+  <div class="summary-label">Estimated warehouse compute savings</div>
+  <div class="summary-breakdown">
+    <div class="summary-item"><div class="summary-item-val">10%</div><div class="summary-item-label">SAO Auto-skip</div></div>
+    <div class="summary-item"><div class="summary-item-val">15%+</div><div class="summary-item-label">SAO Tuned Freshness</div></div>
+    <div class="summary-item"><div class="summary-item-val">2%</div><div class="summary-item-label">Efficient Testing</div></div>
+    <div class="summary-item"><div class="summary-item-val">2%</div><div class="summary-item-label">Slimmer CI/CD</div></div>
+  </div>
+</div>
+<div class="key-points" style="margin-top:24px;">
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">State-Aware Orchestration</strong> — automatically skip what isn't new, tune model runs based on data freshness needs</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Fusion SQL Comprehension</strong> — validate code locally without warehouse compute, catch errors before they cost money</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Efficient Testing</strong> — aggregate tests into single queries, column-aware testing avoids redundant test runs</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Slimmer CI</strong> — column-level awareness rebuilds only models that use changed columns, not all downstream</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Advanced CI</strong> — compare changes against production data before merging, preventing costly rollbacks</div></div>
+</div>
+</div>
+
+<!-- ── Fusion SQL Comprehension ── -->
+<div class="cost-panel" id="cp1">
+<div class="feature-header">
+  <div class="feature-tag">Fusion-Powered Development</div>
+  <div class="feature-title">Fusion SQL Comprehension</div>
+  <div class="feature-subtitle">Legacy dbt requires warehouse compute to catch errors and validate code. Fusion validates locally as you type — errors are caught before they ever hit the warehouse.</div>
+  <div class="savings-badge">💰 Eliminates unnecessary dev warehouse queries</div>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:16px;">
+  <button class="sim-run-btn" onclick="runFusionSim()">▶ Run Developer Simulation</button>
+</div>
+<div class="compare-split">
+  <div class="compare-half before" style="padding-bottom:12px;">
+    <div class="compare-half-label">✕ Without Fusion</div>
+    <div style="font-size:12px;color:#888;margin-bottom:14px;">Every edit → send to warehouse → wait → get error → fix → repeat</div>
+    <div id="fb-wh-counter" style="display:flex;align-items:center;gap:12px;background:#111;border:1px solid #222;border-radius:8px;padding:10px 16px;margin-bottom:14px;">
+      <div id="fb-wh-icon" style="width:36px;height:36px;border-radius:8px;background:#1a1a1a;border:1px solid #333;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;">☁️</div>
+      <div style="flex:1;"><div style="font-size:10px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Warehouse Queries Sent</div><div id="fb-wh-count" style="font-size:24px;font-weight:800;color:#555;transition:all 0.3s ease;">0</div></div>
+      <div style="text-align:right;"><div style="font-size:10px;color:#666;">Time waiting</div><div id="fb-wh-time-val" style="font-size:16px;font-weight:600;color:#555;">0s</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div id="fb-step1" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">💻</span><div style="flex:1;"><strong style="color:#aaa;">Edit 1:</strong> Write query with typo<br><span style="color:#555;font-family:'JetBrains Mono',monospace;font-size:10px;">column_nam instead of column_name</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#111;color:#666;font-weight:600;">LOCAL</span></div>
+      <div id="fb-step2" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">☁️</span><div style="flex:1;"><strong style="color:#aaa;">Send to warehouse for validation...</strong><br><span style="color:#555;">Compiling and running on cloud DB — waiting ~12s</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#3a1a1a;color:#f85149;font-weight:600;">WAREHOUSE</span></div>
+      <div id="fb-step3" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">❌</span><div style="flex:1;"><strong style="color:#f85149;">Error returned after 12s</strong><br><span style="color:#f85149;font-family:'JetBrains Mono',monospace;font-size:10px;">ERROR: column "column_nam" does not exist</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#3a1a1a;color:#f85149;font-weight:600;">PAID ✕</span></div>
+      <div id="fb-step4" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">💻</span><div style="flex:1;"><strong style="color:#EF9F27;">Fix the typo</strong><br><span style="color:#555;">Change column_nam → column_name</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#111;color:#666;font-weight:600;">LOCAL</span></div>
+      <div id="fb-step5" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">☁️</span><div style="flex:1;"><strong style="color:#aaa;">Send to warehouse again...</strong><br><span style="color:#555;">2nd round-trip — compile &amp; run attempt #2 — another ~12s</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#3a1a1a;color:#f85149;font-weight:600;">WAREHOUSE</span></div>
+      <div id="fb-step6" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;"><span style="font-size:14px;">✅</span><div style="flex:1;"><strong style="color:#3fb950;">Success</strong><br><span style="color:#888;">Query validated after 2 warehouse round-trips</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#3a1a1a;color:#f85149;font-weight:600;">PAID ✕</span></div>
+    </div>
+  </div>
+  <div class="compare-half after" style="padding-bottom:12px;">
+    <div class="compare-half-label">✓ With Fusion Engine</div>
+    <div style="font-size:12px;color:#888;margin-bottom:14px;">Every edit → instant local validation → errors caught free → warehouse only for final run</div>
+    <div id="fa-wh-counter" style="display:flex;align-items:center;gap:12px;background:#0a0f0a;border:1px solid #1a3a1a;border-radius:8px;padding:10px 16px;margin-bottom:14px;">
+      <div id="fa-wh-icon" style="width:36px;height:36px;border-radius:8px;background:#0d1a0d;border:1px solid #1a4a2a;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all 0.3s ease;">☁️</div>
+      <div style="flex:1;"><div style="font-size:10px;color:#3a6a3a;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Warehouse Queries Sent</div><div id="fa-wh-count" style="font-size:24px;font-weight:800;color:#3fb950;transition:all 0.3s ease;">0</div></div>
+      <div style="text-align:right;"><div style="font-size:10px;color:#3a6a3a;">Time waiting</div><div id="fa-wh-time-val" style="font-size:16px;font-weight:600;color:#3fb950;">0s</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div id="fa-step1" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">💻</span><div style="flex:1;"><strong style="color:#aaa;">Edit 1:</strong> Write query with typo<br><span style="color:#555;font-family:'JetBrains Mono',monospace;font-size:10px;">column_nam instead of column_name</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#111;color:#666;font-weight:600;">LOCAL</span></div>
+      <div id="fa-step2" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">⚡</span><div style="flex:1;"><strong style="color:#FF694A;">Fusion catches it instantly (0.02s)</strong><br><span style="color:#f85149;font-family:'JetBrains Mono',monospace;font-size:10px;">⚠ Unknown column "column_nam" — did you mean "column_name"?</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#3fb950;font-weight:600;">LOCAL — FREE</span></div>
+      <div id="fa-step3" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">💻</span><div style="flex:1;"><strong style="color:#aaa;">Fix typo immediately</strong><br><span style="color:#3fb950;">Error caught locally — no warehouse query wasted</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#111;color:#666;font-weight:600;">LOCAL</span></div>
+      <div id="fa-step4" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">⚡</span><div style="flex:1;"><strong style="color:#3fb950;">Fusion validates — ✓ SQL is valid (0.02s)</strong><br><span style="color:#555;">All columns exist, types match, refs resolved — no warehouse needed</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#3fb950;font-weight:600;">LOCAL — FREE</span></div>
+      <div id="fa-step5" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">☁️</span><div style="flex:1;"><strong style="color:#aaa;">Send validated query to warehouse</strong><br><span style="color:#555;">Confident it's correct — 1 clean round-trip</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#1a2a3a;color:#58a6ff;font-weight:600;">WAREHOUSE</span></div>
+      <div id="fa-step6" class="flow-box" style="text-align:left;opacity:0.3;font-size:11px;padding:10px 14px;display:flex;align-items:center;gap:10px;border-color:#1a3a1a;"><span style="font-size:14px;">✅</span><div style="flex:1;"><strong style="color:#3fb950;">Success — 1 warehouse query total</strong><br><span style="color:#888;">50% fewer warehouse queries for this iteration</span></div><span style="font-size:9px;padding:3px 8px;border-radius:4px;background:#0d2a1a;color:#3fb950;font-weight:600;">SAVED ✓</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+  <div style="font-size:14px;font-weight:600;color:#F0F2F5;margin-bottom:10px;">Scale this across your team</div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;background:#0a0a0a;border:1px solid #222;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#666;margin-bottom:4px;">Without Fusion</div><div style="font-size:11px;color:#888;margin-bottom:8px;">10 developers × 20 iterations/day × 2 queries each</div><div style="font-size:28px;font-weight:800;color:#f85149;">400</div><div style="font-size:11px;color:#f85149;">warehouse queries / day</div></div>
+    <div style="display:flex;align-items:center;font-size:24px;color:#444;">→</div>
+    <div style="flex:1;min-width:200px;background:#0a0f0a;border:1px solid #1a3a1a;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#3a6a3a;margin-bottom:4px;">With Fusion</div><div style="font-size:11px;color:#888;margin-bottom:8px;">10 developers × 20 iterations/day × 1 query each</div><div style="font-size:28px;font-weight:800;color:#3fb950;">200</div><div style="font-size:11px;color:#3fb950;">warehouse queries / day</div></div>
+    <div style="display:flex;align-items:center;font-size:24px;color:#444;">=</div>
+    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#0a1a0a,#0d2a1a);border:1px solid #1a4a2a;border-radius:8px;padding:14px;text-align:center;"><div style="font-size:11px;color:#3fb950;margin-bottom:8px;font-weight:600;">SAVED EVERY DAY</div><div style="font-size:28px;font-weight:800;color:#3fb950;">200</div><div style="font-size:11px;color:#3fb950;">fewer warehouse queries</div><div style="font-size:10px;color:#888;margin-top:4px;">That's compute you're no longer paying for</div></div>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-block"><div class="stat-block-label">Parse Speed</div><div class="stat-block-val green">30x faster</div></div>
+  <div class="stat-block"><div class="stat-block-label">Error Detection</div><div class="stat-block-val green">Instant, local</div></div>
+  <div class="stat-block"><div class="stat-block-label">Warehouse Queries Saved</div><div class="stat-block-val green">50% per iteration</div></div>
+  <div class="stat-block"><div class="stat-block-label">Works In</div><div class="stat-block-val" style="font-size:14px;">Studio, VS Code, Canvas</div></div>
+</div>
+
+<div style="background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:24px 28px;margin-bottom:20px;">
+  <div style="font-size:16px;font-weight:700;color:#F0F2F5;margin-bottom:4px;">How it works — and why it matters where errors are caught</div>
+  <div style="font-size:13px;color:#8892A2;margin-bottom:24px;">The difference is simple: without Fusion, every error costs warehouse compute. With Fusion, errors are caught on your machine for free.</div>
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <div style="border:2px solid #f85149;border-radius:14px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#FF694A,#f85149);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:16px;font-weight:800;color:#fff;">✕</span><span style="font-size:11px;color:rgba(255,255,255,0.7);font-weight:500;">dbt</span></div><div style="font-size:13px;font-weight:600;color:#fff;">Pre-Fusion workflow</div></div>
+      <div style="background:#14181E;padding:24px 20px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+          <div style="background:#1a1a1a;border:2px solid #444;border-radius:10px;padding:18px 12px;text-align:center;min-width:80px;flex:1;"><div style="font-size:20px;margin-bottom:2px;">🔶</div><div style="font-size:12px;font-weight:700;color:#ccc;">dbt</div></div>
+          <div style="text-align:center;padding:0 2px;flex-shrink:0;"><div style="font-size:9px;color:#EF9F27;font-family:'JetBrains Mono',monospace;margin-bottom:3px;">Raw Query</div><div style="height:2px;width:60px;background:#EF9F27;position:relative;"><div style="position:absolute;right:-6px;top:-4px;border:5px solid transparent;border-left:6px solid #EF9F27;"></div></div></div>
+          <div style="background:#2a2a2e;border-radius:10px;padding:18px 12px;text-align:center;position:relative;flex:1;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:10px;color:#888;font-style:italic;">Local</div><div style="font-size:11px;color:#aaa;">↻ <strong>Preprocess</strong></div></div>
+          <div style="text-align:center;padding:0 2px;flex-shrink:0;"><div style="font-size:9px;color:#888;font-family:'JetBrains Mono',monospace;margin-bottom:3px;">Valid Query?</div><div style="height:2px;width:60px;background:#888;position:relative;"><div style="position:absolute;right:-6px;top:-4px;border:5px solid transparent;border-left:6px solid #888;"></div></div></div>
+          <div style="background:#1a1a2e;border:2px solid #534AB7;border-radius:10px;padding:18px 12px;text-align:center;position:relative;flex:1;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:10px;color:#888;font-style:italic;">Cloud DB</div><div style="font-size:11px;color:#B3AAFF;">↻ <strong>Compile &amp; Run</strong></div></div>
+        </div>
+        <div style="display:flex;align-items:center;margin-top:14px;padding:0 10%;"><div style="border:5px solid transparent;border-right:7px solid #f85149;flex-shrink:0;"></div><div style="flex:1;height:2px;background:#f85149;"></div><span style="font-size:10px;color:#f85149;font-family:'JetBrains Mono',monospace;font-weight:600;padding-left:6px;flex-shrink:0;">Error</span></div>
+        <div style="display:flex;align-items:center;margin-top:6px;padding:0 10%;"><div style="border:5px solid transparent;border-right:7px solid #3fb950;flex-shrink:0;"></div><div style="flex:1;height:2px;background:#3fb950;"></div><span style="font-size:10px;color:#3fb950;font-family:'JetBrains Mono',monospace;font-weight:600;padding-left:6px;flex-shrink:0;">Data</span></div>
+      </div>
+      <div style="background:#1a0a0a;border-top:1px solid #3a1a1a;padding:14px 20px;text-align:center;"><div style="font-size:11px;color:#f85149;font-weight:600;margin-bottom:4px;">EVERY MISTAKE = WAREHOUSE QUERY</div><div style="font-size:12px;color:#888;">Typo? <strong style="color:#f85149;">Warehouse.</strong> Wrong column? <strong style="color:#f85149;">Warehouse.</strong> Bad ref? <strong style="color:#f85149;">Warehouse. Every time.</strong></div></div>
+    </div>
+    <div style="border:2px solid #3fb950;border-radius:14px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#FF694A,#EF9F27);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:16px;font-weight:800;color:#fff;">✓</span><span style="font-size:11px;color:rgba(255,255,255,0.7);font-weight:500;">dbt</span></div><div style="font-size:13px;font-weight:600;color:#fff;">Development with new dbt 'Fusion' engine</div></div>
+      <div style="background:#14181E;padding:24px 20px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+          <div style="background:#FF694A;border-radius:10px;padding:14px 12px;text-align:center;min-width:80px;flex:1;"><div style="font-size:13px;font-weight:800;color:#fff;">dbt</div><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.8);margin-top:1px;">'Fusion'</div><div style="font-size:9px;color:rgba(255,255,255,0.6);">engine</div></div>
+          <div style="text-align:center;padding:0 2px;flex-shrink:0;"><div style="font-size:9px;color:#888;font-family:'JetBrains Mono',monospace;margin-bottom:3px;">Query</div><div style="height:2px;width:60px;background:#EF9F27;position:relative;"><div style="position:absolute;right:-6px;top:-4px;border:5px solid transparent;border-left:6px solid #EF9F27;"></div></div></div>
+          <div style="background:#2a2a2e;border-radius:10px;padding:18px 12px;text-align:center;position:relative;flex:1;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:10px;color:#888;font-style:italic;">Local</div><div style="font-size:11px;color:#aaa;">↻ <strong>Compile &amp; Run</strong></div></div>
+          <div style="text-align:center;padding:0 2px;flex-shrink:0;"><div style="font-size:9px;color:#3fb950;margin-bottom:3px;">✅ Valid Query</div><div style="height:0;width:60px;border-top:2px dashed #3fb950;position:relative;"><div style="position:absolute;right:-6px;top:-5px;border:5px solid transparent;border-left:6px solid #3fb950;"></div></div></div>
+          <div style="background:#1a1a2e;border:2px dashed #534AB7;border-radius:10px;padding:18px 12px;text-align:center;position:relative;flex:1;opacity:0.6;"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:10px;color:#888;font-style:italic;">Cloud DB</div><div style="font-size:11px;color:#B3AAFF;">↻ <strong>Compile &amp; Run</strong></div></div>
+        </div>
+        <div style="display:flex;align-items:center;margin-top:14px;padding:0 10%;padding-right:50%;"><div style="border:5px solid transparent;border-right:7px solid #f85149;flex-shrink:0;"></div><div style="flex:1;height:0;border-top:2px dashed #f85149;"></div><span style="font-size:10px;color:#f85149;font-family:'JetBrains Mono',monospace;font-weight:600;padding-left:6px;flex-shrink:0;">Error</span><span style="font-size:9px;padding:2px 8px;border-radius:4px;background:#0d2a1a;color:#3fb950;font-weight:600;margin-left:6px;flex-shrink:0;">FREE ✓</span></div>
+        <div style="display:flex;align-items:center;margin-top:6px;padding:0 10%;"><div style="border:5px solid transparent;border-right:7px solid #3fb950;flex-shrink:0;"></div><div style="flex:1;height:0;border-top:2px dashed #3fb950;"></div><span style="font-size:10px;color:#3fb950;font-family:'JetBrains Mono',monospace;font-weight:600;padding-left:6px;flex-shrink:0;">Data</span></div>
+      </div>
+      <div style="background:#0a1a0a;border-top:1px solid #1a3a1a;padding:14px 20px;text-align:center;"><div style="font-size:11px;color:#3fb950;font-weight:600;margin-bottom:4px;">MISTAKES ARE CAUGHT FOR FREE</div><div style="font-size:12px;color:#888;">Typo? <strong style="color:#3fb950;">Caught locally.</strong> Wrong column? <strong style="color:#3fb950;">Caught locally.</strong> Warehouse only sees <strong style="color:#3fb950;">clean, valid code.</strong></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ── State-Aware Orchestration ── -->
+<div class="cost-panel" id="cp2">
+<div class="feature-header">
+  <div class="feature-tag">Optimize Data Platform Costs</div>
+  <div class="feature-title">State-Aware Orchestration</div>
+  <div class="feature-subtitle">Fusion automatically determines which models to build by detecting changes in data and code, and skips the rest. No configuration required.</div>
+  <div class="savings-badge">💰 Up to 25%+ warehouse savings</div>
+</div>
+<div class="sim-controls" id="sao-mode-btns">
+  <button class="sim-btn active" onclick="setSaoMode(0)">Without Fusion</button>
+  <button class="sim-btn" onclick="setSaoMode(1)">SAO Default</button>
+  <button class="sim-btn" onclick="setSaoMode(2)">SAO Tuned (SLA)</button>
+  <button class="sim-run-btn" onclick="runSaoSim()">Run Simulation</button>
+</div>
+<div id="sao-description" style="font-size:13px;color:#8892A2;margin-bottom:16px;">Without state-awareness, all models are built on every run — even when upstream data hasn't changed.</div>
+<div class="dag-container" id="sao-dag">
+  <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span class="dag-label">DAG</span><span style="font-size:10px;color:#444;">Sources → Staging → Intermediate → Marts</span></div>
+  <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;grid-template-rows:auto auto auto;align-items:center;gap:8px 8px;">
+    <div class="dag-node source stale" id="sao-src-orders" style="min-width:110px;">src_orders<div class="dag-node-label">Stale source</div></div>
+    <div class="dag-arrow">→</div>
+    <div class="dag-node" id="sao-stg-orders" style="background:#111;border:1px solid #262626;color:#888;">stg_orders<div class="dag-node-label">Staging</div></div>
+    <div class="dag-arrow">→</div>
+    <div class="dag-node" id="sao-int-orders" style="background:#111;border:1px solid #262626;color:#888;">int_orders<div class="dag-node-label">Intermediate</div></div>
+    <div class="dag-arrow">↘</div>
+    <div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    <div class="dag-node" id="sao-cust-orders" style="background:#111;border:1px solid #262626;color:#888;">cust_orders<div class="dag-node-label">Mart</div></div>
+    <div class="dag-node source fresh" id="sao-src-customers" style="min-width:110px;">src_customers<div class="dag-node-label">Fresh source</div></div>
+    <div class="dag-arrow">→</div>
+    <div class="dag-node" id="sao-stg-customers" style="background:#111;border:1px solid #262626;color:#888;">stg_customers<div class="dag-node-label">Staging</div></div>
+    <div class="dag-arrow">→</div>
+    <div class="dag-node" id="sao-dim-customers" style="background:#111;border:1px solid #262626;color:#888;">dim_customers<div class="dag-node-label">Mart</div></div>
+    <div class="dag-arrow">↗</div>
+    <div></div>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="stat-block"><div class="stat-block-label">Models Built</div><div class="stat-block-val" id="sao-built">—</div></div>
+  <div class="stat-block"><div class="stat-block-label">Models Skipped / Reused</div><div class="stat-block-val green" id="sao-skipped">—</div></div>
+  <div class="stat-block"><div class="stat-block-label">Wasted Compute</div><div class="stat-block-val orange" id="sao-wasted">—</div></div>
+  <div class="stat-block"><div class="stat-block-label">Savings</div><div class="stat-block-val green" id="sao-savings">—</div></div>
+</div>
+<div id="sao-log" style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;max-height:180px;overflow-y:auto;line-height:1.8;">Click "Run Simulation" to see state-aware orchestration...</div>
+</div>
+
+<!-- ── Efficient Testing ── -->
+<div class="cost-panel" id="cp3">
+<div class="feature-header">
+  <div class="feature-tag">Optimize Data Platform Costs</div>
+  <div class="feature-title">Efficient Testing</div>
+  <div class="feature-subtitle">Avoid extra costs and save time on testing — aggregate tests into single queries and skip redundant tests with column-aware intelligence.</div>
+  <div class="savings-badge">💰 ~2% warehouse savings</div>
+</div>
+<div style="background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+  <div style="font-size:15px;font-weight:700;color:#F0F2F5;margin-bottom:12px;">Why does combining 3 tests into 1 query save money?</div>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:220px;"><div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;"><div style="width:28px;height:28px;border-radius:6px;background:rgba(248,81,73,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:#f85149;">✕</div><div style="font-size:13px;color:#C5CBD6;line-height:1.6;"><strong style="color:#f85149;">3 separate queries</strong> means your warehouse has to scan the same table 3 times, schedule 3 separate jobs, and you pay for 3 execution cycles — even though they're all reading the same data.</div></div></div>
+    <div style="flex:1;min-width:220px;"><div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;"><div style="width:28px;height:28px;border-radius:6px;background:rgba(63,185,80,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:#3fb950;">✓</div><div style="font-size:13px;color:#C5CBD6;line-height:1.6;"><strong style="color:#3fb950;">1 combined query</strong> scans the table once, evaluates all 3 tests in a single pass, and returns all results together. One execution cycle, one table scan, one bill.</div></div></div>
+  </div>
+  <div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:12px 16px;font-size:12px;color:#888;line-height:1.6;"><strong style="color:#EF9F27;">The math at scale:</strong> A project with 50 models averaging 3 tests each = <strong style="color:#f85149;">150 warehouse queries</strong> per run. With test aggregation, that drops to <strong style="color:#3fb950;">50 queries</strong> — 100 fewer queries every single run.</div>
+</div>
+<div class="compare-split">
+  <div class="compare-half before">
+    <div class="compare-half-label">✕ Before — 3 separate queries</div>
+    <div class="test-query">SELECT count(*) FROM (SELECT ... test1 ...)</div>
+    <div class="test-query">SELECT count(*) FROM (SELECT ... test2 ...)</div>
+    <div class="test-query">SELECT count(*) FROM (SELECT ... test3 ...)</div>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:#f85149;font-weight:600;">3 warehouse queries per model</div>
+    <div style="text-align:center;margin-top:4px;font-size:11px;color:#888;">3 table scans · 3 execution cycles · 3× the cost</div>
+  </div>
+  <div class="compare-half after">
+    <div class="compare-half-label">✓ After — 1 combined query</div>
+    <div class="test-combined">WITH ... test1<br>WITH ... test2<br>WITH ... test3<br>SELECT ...</div>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:#3fb950;font-weight:600;">1 warehouse query per model</div>
+    <div style="text-align:center;margin-top:4px;font-size:11px;color:#888;">1 table scan · 1 execution cycle · 1× the cost</div>
+  </div>
+</div>
+<div style="background:#14181E;border:1px solid #1E2430;border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+  <div style="font-size:15px;font-weight:700;color:#F0F2F5;margin-bottom:6px;">Column-aware testing goes even further</div>
+  <div style="font-size:13px;color:#8892A2;line-height:1.6;margin-bottom:12px;">Fusion understands how columns flow through your DAG. If a column passes a test at one layer, and downstream models inherit that column without transforming it, the test doesn't need to run again — Fusion knows it would pass by definition.</div>
+  <div style="display:flex;align-items:flex-start;gap:10px;"><div style="width:28px;height:28px;border-radius:6px;background:rgba(127,119,221,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;color:#7F77DD;">♻</div><div style="font-size:13px;color:#C5CBD6;line-height:1.6;"><strong style="color:#7F77DD;">Example:</strong> <code style="background:#1a1a2a;padding:1px 6px;border-radius:3px;font-size:11px;color:#B3AAFF;">customer_id</code> passes a uniqueness test at the staging layer. The mart model inherits the same column unchanged — so Fusion skips the duplicate test entirely. Zero warehouse cost for that test.</div></div>
+</div>
+<div class="dag-container">
+  <div class="dag-label">Column-Aware Test Reuse — in action</div>
+  <div style="display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap;justify-content:center;">
+    <div class="col-model"><div class="col-model-name">src_customers</div><div class="col-item unchanged">customer_id 🔑</div><div class="col-item unchanged">first_name</div><div class="col-item unchanged">last_name</div><div class="col-item unchanged">email</div><div style="font-size:10px;color:#EF9F27;margin-top:8px;text-align:center;">unique test on customer_id</div></div>
+    <div class="col-arrow">→</div>
+    <div class="col-model" style="border-color:#1a4a2a;"><div class="col-model-name" style="color:#3fb950;">stg_customers</div><div class="col-item used">customer_id 🔑</div><div class="col-item unchanged">customer_name</div><div class="col-item unchanged">email</div><div class="col-item unchanged">signup_channel</div><div style="font-size:10px;color:#3fb950;margin-top:8px;text-align:center;">✓ unique test runs here</div><div style="font-size:9px;color:#888;text-align:center;">1 warehouse query</div></div>
+    <div class="col-arrow">→</div>
+    <div class="col-model" style="border-color:#2a2a5a;"><div class="col-model-name" style="color:#7F77DD;">dim_customers</div><div class="col-item used">customer_id 🔑</div><div class="col-item unchanged">customer_name</div><div class="col-item unchanged">loyalty_tier</div><div class="col-item unchanged">lifetime_value</div><div style="font-size:10px;color:#7F77DD;margin-top:8px;text-align:center;">♻ test reused from staging</div><div style="font-size:9px;color:#3fb950;text-align:center;">0 warehouse queries — FREE</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ── Slimmer CI ── -->
+<div class="cost-panel" id="cp4">
+<div class="feature-header">
+  <div class="feature-tag">Optimize Data Platform Costs</div>
+  <div class="feature-title">Slimmer CI</div>
+  <div class="feature-subtitle">Rebuild only models that use the changed columns rather than all models downstream of a code change. Column-level intelligence for CI/CD.</div>
+  <div class="savings-badge">💰 ~2% warehouse savings</div>
+</div>
+<div class="compare-split">
+  <div class="compare-half before">
+    <div class="compare-half-label">✕ Slim CI — Table-level</div>
+    <div style="display:flex;align-items:flex-start;gap:16px;justify-content:center;padding:16px 0;">
+      <div><div class="col-model"><div class="col-model-name">stg_customers</div><div class="col-item changed">email ← changed</div><div class="col-item unchanged">customer_id</div><div class="col-item unchanged">name</div></div><div class="col-build-label triggers">Any change here</div></div>
+      <div class="col-arrow">→</div>
+      <div><div class="col-model" style="border-color:#5a2a00;"><div class="col-model-name" style="color:#EF9F27;">dim_customers</div><div class="col-item unchanged">customer_id</div><div class="col-item unchanged">name</div><div class="col-item unused">loyalty_tier</div></div><div class="col-build-label triggers">Always triggers build</div></div>
+    </div>
+  </div>
+  <div class="compare-half after">
+    <div class="compare-half-label">✓ Slimmer CI — Column-level</div>
+    <div style="display:flex;align-items:flex-start;gap:16px;justify-content:center;padding:16px 0;">
+      <div><div class="col-model"><div class="col-model-name">stg_customers</div><div class="col-item changed">email ← changed</div><div class="col-item unchanged">customer_id</div><div class="col-item unchanged">name</div></div><div class="col-build-label triggers">Change here</div></div>
+      <div class="col-arrow">→</div>
+      <div><div class="col-model" style="border-color:#1a4a2a;"><div class="col-model-name" style="color:#3fb950;">dim_customers</div><div class="col-item unused">customer_id</div><div class="col-item unused">name</div><div class="col-item unused">loyalty_tier</div><div style="font-size:10px;color:#555;margin-top:4px;">doesn't use email</div></div><div class="col-build-label skips">Build skipped ✓</div></div>
+    </div>
+  </div>
+</div>
+<div class="key-points">
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Column-level lineage</strong> — Fusion understands exactly which columns flow to which downstream models</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Precise rebuilds</strong> — if you change a column that dim_customers doesn't reference, it's skipped entirely</div></div>
+  <div class="key-point"><div class="key-point-icon save">✓</div><div><strong style="color:#F0F2F5;">Stacks with SAO</strong> — combine with state-aware orchestration for compound savings</div></div>
+</div>
+</div>
+
+</div>
+
+<script>
+function showCost(i){
+  document.querySelectorAll('.cost-panel').forEach(function(p,j){p.classList.toggle('on',j===i);});
+  document.querySelectorAll('.cost-feature-btn').forEach(function(b,j){b.classList.toggle('active',j===i);});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function runFusionSim(){
+  for(var i=1;i<=6;i++){
+    document.getElementById('fb-step'+i).style.opacity='0.3';
+    document.getElementById('fb-step'+i).style.borderColor='#262626';
+    document.getElementById('fa-step'+i).style.opacity='0.3';
+    document.getElementById('fa-step'+i).style.borderColor='#1a3a1a';
+  }
+  document.getElementById('fb-wh-count').textContent='0';
+  document.getElementById('fb-wh-count').style.color='#555';
+  document.getElementById('fb-wh-time-val').textContent='0s';
+  document.getElementById('fb-wh-time-val').style.color='#555';
+  document.getElementById('fb-wh-icon').style.background='#1a1a1a';
+  document.getElementById('fb-wh-icon').style.borderColor='#333';
+  document.getElementById('fa-wh-count').textContent='0';
+  document.getElementById('fa-wh-time-val').textContent='0s';
+  document.getElementById('fa-wh-icon').style.background='#0d1a0d';
+  document.getElementById('fa-wh-icon').style.borderColor='#1a4a2a';
+  document.getElementById('fa-wh-icon').textContent='☁️';
+
+  function showStep(prefix,num,borderColor,delay){
+    setTimeout(function(){
+      var el=document.getElementById(prefix+'-step'+num);
+      el.style.opacity='1';el.style.borderColor=borderColor;
+      if(num>1)document.getElementById(prefix+'-step'+(num-1)).style.opacity='0.6';
+    },delay);
+  }
+  function pulseWarehouse(prefix,delay){
+    setTimeout(function(){
+      var icon=document.getElementById(prefix+'-wh-icon');
+      icon.style.background='#3a1a1a';icon.style.borderColor='#f85149';icon.textContent='☁️';
+      setTimeout(function(){icon.style.background='#1a1a1a';icon.style.borderColor='#333';},800);
+    },delay);
+  }
+  function setWhCount(prefix,count,time,delay){
+    setTimeout(function(){
+      document.getElementById(prefix+'-wh-count').textContent=count;
+      document.getElementById(prefix+'-wh-count').style.color=prefix==='fb'?'#f85149':'#3fb950';
+      document.getElementById(prefix+'-wh-time-val').textContent=time;
+      document.getElementById(prefix+'-wh-time-val').style.color=prefix==='fb'?'#f85149':'#3fb950';
+    },delay);
+  }
+  showStep('fb',1,'#444',400);showStep('fb',2,'#5a3a00',1600);pulseWarehouse('fb',1600);setWhCount('fb','1','~12s',1600);
+  showStep('fb',3,'#3a1a1a',3800);showStep('fb',4,'#5a3a00',5200);showStep('fb',5,'#5a3a00',6400);pulseWarehouse('fb',6400);setWhCount('fb','2','~24s',6400);showStep('fb',6,'#1a3a1a',8600);
+  showStep('fa',1,'#1a2a1a',400);showStep('fa',2,'#5a3a00',900);showStep('fa',3,'#1a2a1a',1800);showStep('fa',4,'#1a3a1a',2600);showStep('fa',5,'#1a2a3a',3400);
+  setTimeout(function(){var icon=document.getElementById('fa-wh-icon');icon.style.background='#1a2a3a';icon.style.borderColor='#58a6ff';icon.textContent='☁️';setTimeout(function(){icon.style.background='#0d2a1a';icon.style.borderColor='#1a4a2a';icon.textContent='✅';},800);},3400);
+  setWhCount('fa','1','~12s',3400);showStep('fa',6,'#1a3a1a',4800);
+}
+
+var saoMode=0;
+var saoDescs=['Without state-awareness, all models are built on every run — even when upstream data hasn\'t changed.','SAO Default: Fusion detects which sources have new data and only rebuilds downstream models. Unchanged models are reused.','SAO Tuned: Each model has a freshness SLA (e.g. "rebuild only if older than 6 hours"). If a model was built recently and is still within its SLA, it is reused — no rebuild needed, no warehouse cost. In this example, all models were built within their SLA window, so nothing runs.'];
+
+function setSaoMode(m){
+  saoMode=m;
+  document.querySelectorAll('#sao-mode-btns .sim-btn').forEach(function(b,j){b.classList.toggle('active',j===m);});
+  document.getElementById('sao-description').textContent=saoDescs[m];
+  resetSaoDAG();
+}
+function resetSaoDAG(){
+  ['sao-stg-orders','sao-int-orders','sao-cust-orders','sao-stg-customers','sao-dim-customers'].forEach(function(id){
+    var el=document.getElementById(id);
+    el.style.background='#111';el.style.borderColor='#262626';el.style.color='#888';el.style.textDecoration='none';el.style.opacity='1';
+    var s=el.querySelector('.dag-node-status');if(s)s.remove();
+  });
+  document.getElementById('sao-built').textContent='—';document.getElementById('sao-skipped').textContent='—';
+  document.getElementById('sao-wasted').textContent='—';document.getElementById('sao-savings').textContent='—';
+  document.getElementById('sao-log').innerHTML='Click "Run Simulation" to see state-aware orchestration...';
+}
+function addStatus(el,cls,text){var e=el.querySelector('.dag-node-status');if(e)e.remove();var s=document.createElement('span');s.className='dag-node-status '+cls;s.textContent=text;el.appendChild(s);}
+function setNode(id,type,delay){
+  setTimeout(function(){
+    var el=document.getElementById(id);
+    if(type==='built'){el.style.background='#0d2a1a';el.style.borderColor='#1a4a2a';el.style.color='#3fb950';addStatus(el,'build','✓ Built');}
+    else if(type==='wasted'){el.style.background='#2a1a00';el.style.borderColor='#5a3a00';el.style.color='#EF9F27';addStatus(el,'waste','⚠ Wasted');}
+    else if(type==='skipped'){el.style.background='#1a1a1a';el.style.borderColor='#262626';el.style.color='#555';el.style.textDecoration='line-through';el.style.opacity='0.5';addStatus(el,'skip','⊘ Skip');}
+    else if(type==='reused'){el.style.background='#1a1a2e';el.style.borderColor='#2a2a5a';el.style.color='#7F77DD';addStatus(el,'reuse','♻ Within SLA');}
+  },delay);
+}
+function runSaoSim(){
+  resetSaoDAG();
+  var log=document.getElementById('sao-log');log.innerHTML='';
+  function addLog(msg,color,delay){setTimeout(function(){var l=document.createElement('div');l.style.color=color||'#888';l.textContent=msg;log.appendChild(l);log.scrollTop=log.scrollHeight;},delay);}
+  if(saoMode===0){
+    addLog('$ dbt build','#fff',200);addLog('START stg_orders','#3fb950',500);setNode('sao-stg-orders','built',500);addLog('START stg_customers','#3fb950',800);setNode('sao-stg-customers','built',800);addLog('OK stg_orders','#888',1200);addLog('OK stg_customers','#888',1300);addLog('START int_orders','#3fb950',1600);setNode('sao-int-orders','built',1600);addLog('START dim_customers','#3fb950',1800);setNode('sao-dim-customers','built',1800);addLog('OK int_orders','#888',2200);addLog('OK dim_customers','#888',2400);addLog('START cust_orders','#3fb950',2600);setNode('sao-cust-orders','built',2600);addLog('OK cust_orders','#888',3000);addLog('','#888',3200);addLog('WASTED stg_orders (no upstream data changed)','#EF9F27',3400);setNode('sao-stg-orders','wasted',3400);addLog('WASTED int_orders (no upstream data changed)','#EF9F27',3600);setNode('sao-int-orders','wasted',3600);
+    setTimeout(function(){document.getElementById('sao-built').textContent='5';document.getElementById('sao-skipped').textContent='0';document.getElementById('sao-wasted').textContent='3 models';document.getElementById('sao-savings').textContent='0%';document.getElementById('sao-savings').className='stat-block-val red';},3800);
+  }else if(saoMode===1){
+    addLog('$ dbt build --select source:src_customers+','#fff',200);addLog('Source freshness check: src_customers has new data','#3fb950',500);addLog('SKIP stg_orders (source stale)','#7F77DD',800);setNode('sao-stg-orders','skipped',800);addLog('SKIP int_orders (source stale)','#7F77DD',1000);setNode('sao-int-orders','skipped',1000);addLog('START stg_customers','#3fb950',1300);setNode('sao-stg-customers','built',1300);addLog('OK stg_customers','#888',1800);addLog('START dim_customers','#3fb950',2000);setNode('sao-dim-customers','built',2000);addLog('OK dim_customers','#888',2500);addLog('START cust_orders','#3fb950',2700);setNode('sao-cust-orders','built',2700);addLog('OK cust_orders','#888',3200);
+    setTimeout(function(){document.getElementById('sao-built').textContent='3';document.getElementById('sao-skipped').textContent='2';document.getElementById('sao-wasted').textContent='0 models';document.getElementById('sao-savings').textContent='~10%';document.getElementById('sao-savings').className='stat-block-val green';},3400);
+  }else if(saoMode===2){
+    addLog('$ dbt build --select source:src_customers+','#fff',200);addLog('Source freshness check: src_customers has new data','#3fb950',500);addLog('SKIP stg_orders (source stale — no new data)','#7F77DD',800);setNode('sao-stg-orders','skipped',800);addLog('SKIP int_orders (source stale — no new data)','#7F77DD',1000);setNode('sao-int-orders','skipped',1000);addLog('','#888',1200);addLog('Checking SLA for stg_customers...','#58a6ff',1300);addLog('  → SLA: rebuild if older than 6 hours','#58a6ff',1500);addLog('  → Last built: 4 hours ago','#58a6ff',1700);addLog('  → 4h < 6h SLA — model is still fresh, no rebuild needed','#3fb950',1900);addLog('REUSE stg_customers (built 4h ago, within 6h SLA)','#7F77DD',2200);setNode('sao-stg-customers','reused',2200);addLog('','#888',2400);addLog('Checking SLA for dim_customers...','#58a6ff',2500);addLog('  → Last built: 4 hours ago — within SLA','#3fb950',2700);addLog('REUSE dim_customers (within SLA — no rebuild needed)','#7F77DD',2900);setNode('sao-dim-customers','reused',2900);addLog('','#888',3100);addLog('Checking SLA for cust_orders...','#58a6ff',3200);addLog('  → All upstream models within SLA — no rebuild needed','#3fb950',3400);addLog('REUSE cust_orders (all upstream fresh, within SLA)','#7F77DD',3600);setNode('sao-cust-orders','reused',3600);addLog('','#888',3800);addLog('Done — 0 models built, 5 reused or skipped. Zero warehouse compute.','#3fb950',4000);
+    setTimeout(function(){document.getElementById('sao-built').textContent='0';document.getElementById('sao-skipped').textContent='5';document.getElementById('sao-wasted').textContent='0 models';document.getElementById('sao-savings').textContent='~25%+';document.getElementById('sao-savings').className='stat-block-val green';},4200);
+  }
+}
+</script>
